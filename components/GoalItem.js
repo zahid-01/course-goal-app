@@ -1,4 +1,12 @@
-import { View, FlatList, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  Pressable,
+  Modal,
+  Button,
+} from 'react-native';
 
 const GoalItem = (props) => {
   return (
@@ -8,7 +16,13 @@ const GoalItem = (props) => {
         renderItem={(itemData) => {
           return (
             <View style={styles.goal}>
-              <Text style={styles.goalText}>{itemData.item.text}</Text>
+              <Pressable
+                android_ripple={{ color: '#ddd' }}
+                onPress={props.deleteGoal.bind(this, itemData.item.key)}
+                style={({ pressed }) => pressed && { opacity: 0.5 }}
+              >
+                <Text style={styles.goalText}>{itemData.item.text}</Text>
+              </Pressable>
             </View>
           );
         }}
@@ -22,15 +36,15 @@ const styles = StyleSheet.create({
     flex: 5,
   },
   goal: {
-    margin: 8,
-    padding: 8,
+    margin: 16,
     borderRadius: 6,
     backgroundColor: '#5e0acc',
     color: 'white',
-    alignItems: 'center',
   },
   goalText: {
+    padding: 8,
     color: 'white',
+    alignSelf: 'center',
   },
 });
 

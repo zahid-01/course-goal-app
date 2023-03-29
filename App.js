@@ -1,44 +1,58 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 
 import GoalInput from './components/GoalInput';
 import GoalItem from './components/GoalItem';
 
 const App = () => {
-  const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
+  const [modalVisibility, setModalVisibility] = useState(false);
 
-  const goalInpHandler = (e) => {
-    setEnteredGoal(e);
-  };
-
-  const addGoalHandler = () => {
-    if (enteredGoal.trim().length === 0) {
-      alert('Enter a valid goal');
-      return;
-    }
+  const addGoalHandler = (goal) => {
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
-      { text: enteredGoal, key: Math.random() },
+      { text: goal, key: Math.random() },
     ]);
   };
 
+  const deleteGoalHandler = (id, emm) => {
+    setCourseGoals((currentCourseGoals) =>
+      currentCourseGoals.filter((el) => el.key !== id)
+    );
+  };
+
+  const modalVisibilityHandler = () => {
+    setModalVisibility((prevState) => !prevState);
+  };
+
   return (
-    <View style={styles.container}>
-      <GoalInput goalInput={goalInpHandler} saveGoals={addGoalHandler} />
-      <GoalItem goalsArray={courseGoals} />
-    </View>
+    <>
+      <StatusBar style="light" />
+      <View style={styles.container}>
+        <Button
+          title="Add Goal"
+          color="#5e0a33"
+          onPress={modalVisibilityHandler}
+        />
+        {modalVisibility && (
+          <GoalInput
+            saveGoals={addGoalHandler}
+            modalVisibility={modalVisibilityHandler}
+          />
+        )}
+
+        <GoalItem goalsArray={courseGoals} deleteGoal={deleteGoalHandler} />
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    flex: 1,
     paddingTop: 70,
     paddingHorizontal: 15,
-    flex: 1,
-    backgroundColor: '#d8e8e6',
   },
 });
 
